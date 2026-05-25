@@ -15,10 +15,10 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // real HTML file. In every other context (Lovable preview, local dev, default
 // production build) behavior is unchanged.
 const isGithubPages = process.env.DEPLOY_TARGET === "github-pages";
-// The site is served as a GitHub Pages project page at
-// https://lumin8hub.github.io/torontosheltermap/, so the base path must include
-// the repo name. The workflow can override BASE_PATH (e.g. "/" for a custom domain).
-const basePath = process.env.BASE_PATH ?? "/torontosheltermap/";
+// The Pages workflow sets BASE_PATH=/torontosheltermap/ (the project page lives at
+// https://lumin8hub.github.io/torontosheltermap/). For Lovable preview, local dev,
+// and Cloudflare builds we serve from the root so assets resolve correctly.
+const basePath = process.env.BASE_PATH ?? (isGithubPages ? "/torontosheltermap/" : "/");
 
 export default defineConfig({
   cloudflare: isGithubPages ? false : undefined,
