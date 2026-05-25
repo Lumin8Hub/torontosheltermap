@@ -467,27 +467,31 @@ export function FindEsti() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-              gap: 12,
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: 14,
               marginBottom: 22,
             }}
           >
             {(
               [
-                ["Esti 1.jpg", "Recent photo of Esti", "Recent"],
-                ["Esti 2.jpg", "Recent close-up of Esti's face", "Recent close-up"],
+                ["Esti 1.jpg", "Recent photo of Esti", "Recent", "center"],
+                ["Esti 2.jpg", "Recent close-up of Esti's face", "Recent close-up", "center"],
                 [
                   "Esti 3.png",
                   "Esti in the green sweater and grey sweatpants she was last seen wearing",
                   "Last seen wearing",
+                  // Source is a tall portrait crop; anchor to the top so her face stays
+                  // in the square thumbnail instead of being cropped off above the shoulders.
+                  "center top",
                 ],
                 [
                   "Esti Security Footage.jpg",
                   "Security camera stills of Esti the night she disappeared",
                   "Security footage",
+                  "center",
                 ],
-              ] as [string, string, string][]
-            ).map(([file, alt, caption]) => (
+              ] as [string, string, string, string][]
+            ).map(([file, alt, caption, objectPosition]) => (
               <figure
                 key={file}
                 style={{
@@ -508,6 +512,7 @@ export function FindEsti() {
                     width: "100%",
                     aspectRatio: "1 / 1",
                     objectFit: "cover",
+                    objectPosition,
                     background: C.paper,
                   }}
                 />
