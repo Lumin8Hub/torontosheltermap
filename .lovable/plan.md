@@ -1,39 +1,20 @@
 ## Goal
-Build an interactive map of Toronto showing the 30 shelters and donation centres from the uploaded data, with category filters, a searchable sidebar, and detailed info popups.
+Add the 26 drop-in centres from the uploaded file as a new "Drop-In Centre" category on the map, alongside the existing Youth Shelter, Adult Shelter, and Donation Centre categories.
 
-## Pages
-- `/` (`src/routes/index.tsx`) — Full-page app: header, map, sidebar list, legend.
+## Changes
 
-## Features
-- **Interactive Leaflet map** centered on downtown Toronto, CartoDB Positron basemap.
-- **30 markers** colour-coded by category:
-  - Youth Shelter (blue)
-  - Adult Shelter (red)
-  - Donation Centre (green)
-- **Click marker → popup** with name, category, address, and services.
-- **Sidebar** listing all locations, grouped/filterable by category. Clicking a list item flies the map to that marker and opens its popup.
-- **Search bar** to filter the list and markers by name/address.
-- **Legend** at bottom-left.
-- Counts per category shown in the filter chips.
+### 1. `src/data/shelters.ts`
+- Extend `ShelterCategory` union with `"Drop-In Centre"`.
+- Append 26 new entries (id, name, address, category: "Drop-In Centre", services from "Key Services & Target Demographic", lat/lon hand-coded from known Toronto address coordinates).
+- Add `"Drop-In Centre": "#f39c12"` (amber/orange — distinct from existing blue/red/green) to `CATEGORY_COLORS`.
 
-## Tech
-- React-Leaflet (`leaflet` + `react-leaflet`) — works client-side; will guard SSR.
-- Data lives in `src/data/shelters.ts` (typed array transcribed from the uploaded HTML's data block — already contains lat/lon).
-- Styled with the existing Tailwind/shadcn design system; clean modern layout, Toronto-appropriate palette (deep navy + clean whites + category accent colours).
+### 2. `src/components/SheltersSidebar.tsx`
+- Add a 4th filter chip for "Drop-In Centre" with matching icon (e.g. `Coffee` or `Home` from lucide-react) and color.
 
-## File structure
-```
-src/
-  routes/index.tsx          # page composition + SEO head
-  components/
-    SheltersMap.tsx         # Leaflet map (dynamic import / client-only)
-    SheltersSidebar.tsx     # search + filter chips + list
-    ShelterCard.tsx         # list item
-  data/shelters.ts          # 30 entries with name, address, category, services, lat, lon
-  hooks/useShelterFilters.ts
-```
+### 3. `src/routes/index.tsx`
+- Add "Drop-In Centre" to the legend.
+- Include it in the default active categories set so markers show on load.
 
 ## Notes
-- Leaflet CSS imported in the map component.
-- Map component rendered only after mount (no SSR for `window`/`L`).
-- No backend needed — static data.
+- No changes needed to `SheltersMap.tsx` — it already renders any category present in `CATEGORY_COLORS`.
+- Total markers go from 30 → 56.
