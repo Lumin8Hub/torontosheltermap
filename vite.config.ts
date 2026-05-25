@@ -40,7 +40,5 @@ export default defineConfig({
         pages: [{ path: "/" }],
       }
     : undefined,
-  vite: {
-    base: basePath,
-  },
+  ...(basePath !== "/" ? { vite: { base: basePath } } : {}),
 });
