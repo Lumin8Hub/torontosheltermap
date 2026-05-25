@@ -137,6 +137,113 @@ export function FindEsti() {
         href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
       />
 
+      {/* ── TOP NAV ──────────────────────────────────────────── */}
+      <nav
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          background: C.ink,
+          color: "#fff",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1040,
+            margin: "0 auto",
+            padding: "10px 16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              fontFamily: font.display,
+              fontWeight: 900,
+              fontSize: 15,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#fff",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: C.amber,
+                animation: "pulse 2s infinite",
+                display: "inline-block",
+              }}
+            />
+            Find Esti
+          </Link>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Link
+              to="/map"
+              style={{
+                fontFamily: font.display,
+                fontWeight: 700,
+                fontSize: 13,
+                color: "#fff",
+                textDecoration: "none",
+                padding: "7px 12px",
+                borderRadius: 8,
+                background: C.teal,
+              }}
+            >
+              Interactive map
+            </Link>
+            <a
+              href="tel:6473554148"
+              style={{
+                fontFamily: font.display,
+                fontWeight: 700,
+                fontSize: 13,
+                color: "#fff",
+                textDecoration: "none",
+                padding: "7px 12px",
+                borderRadius: 8,
+                border: "1px solid rgba(255,255,255,0.25)",
+              }}
+            >
+              Tip line
+            </a>
+            <a
+              href="tel:911"
+              style={{
+                fontFamily: font.display,
+                fontWeight: 800,
+                fontSize: 13,
+                color: "#fff",
+                textDecoration: "none",
+                padding: "7px 12px",
+                borderRadius: 8,
+                background: C.amber,
+              }}
+            >
+              911
+            </a>
+          </div>
+        </div>
+      </nav>
+
       {/* ── HERO ─────────────────────────────────────────────── */}
       <header
         style={{
@@ -258,6 +365,22 @@ export function FindEsti() {
           >
             Tip line: 647-355-4148
           </a>
+          <Link
+            to="/map"
+            style={{
+              background: "rgba(0,0,0,0.22)",
+              color: "#fff",
+              textDecoration: "none",
+              fontFamily: font.display,
+              fontWeight: 800,
+              fontSize: 15,
+              padding: "14px 22px",
+              borderRadius: 10,
+              border: "1px solid rgba(255,255,255,0.35)",
+            }}
+          >
+            Search the shelter map →
+          </Link>
         </div>
         <a
           href="https://www.tps.ca/missing/find-esther/"
@@ -618,6 +741,62 @@ export function FindEsti() {
               </Card>
             ))}
           </div>
+
+          {/* Map CTA — briefing shelters & drop-ins */}
+          <Link
+            to="/map"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              marginTop: 18,
+              background: C.card,
+              border: `1px solid ${C.line}`,
+              borderLeft: `5px solid ${C.amber}`,
+              borderRadius: 12,
+              padding: "16px 18px",
+              textDecoration: "none",
+              color: C.ink,
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: font.display,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: C.amber,
+                  marginBottom: 4,
+                }}
+              >
+                Briefing staff next?
+              </div>
+              <div
+                style={{
+                  fontFamily: font.display,
+                  fontWeight: 800,
+                  fontSize: 16,
+                  lineHeight: 1.25,
+                }}
+              >
+                Find the shelter or drop-in nearest your route →
+              </div>
+            </div>
+            <span
+              style={{
+                fontFamily: font.display,
+                fontWeight: 800,
+                fontSize: 13,
+                color: C.tealDeep,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Open map
+            </span>
+          </Link>
         </Section>
 
         {/* ── DON'T WASTE ENERGY ─────────────────────────────── */}
