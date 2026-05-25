@@ -444,8 +444,7 @@ export function FindEsti() {
                 background: "#000",
               }}
             >
-              Your browser does not support embedded video. You can{" "}
-              <a href={`${import.meta.env.BASE_URL}Esti.mp4`}>download the video</a> instead.
+              Your browser does not support embedded video.
             </video>
             <figcaption
               style={{
