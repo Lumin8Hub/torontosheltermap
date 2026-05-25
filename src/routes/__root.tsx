@@ -72,14 +72,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Find Esti — Missing Toronto Teen" },
+      {
+        name: "description",
+        content:
+          "Community search board for Esti, a missing 14-year-old in Toronto. How to help, the confirmed timeline, an interactive shelter map, and who to contact.",
+      },
+      { property: "og:title", content: "Find Esti — Missing Toronto Teen" },
+      {
+        property: "og:description",
+        content: "Help find Esti, a missing 14-year-old in Toronto.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
