@@ -421,6 +421,73 @@ export function FindEsti() {
       <main style={{ paddingTop: 44 }}>
         {/* ── WHO TO LOOK FOR ────────────────────────────────── */}
         <Section kicker="Who to look for" title="What Esti looks like">
+          {/* Photo gallery — reference images so people can recognise her on the street */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gap: 12,
+              marginBottom: 22,
+            }}
+          >
+            {(
+              [
+                ["Esti 1.jpg", "Recent photo of Esti", "Recent"],
+                ["Esti 2.jpg", "Recent close-up of Esti's face", "Recent close-up"],
+                [
+                  "Esti 3.png",
+                  "Esti in the green sweater and grey sweatpants she was last seen wearing",
+                  "Last seen wearing",
+                ],
+                [
+                  "Esti Security Footage.jpg",
+                  "Security camera stills of Esti the night she disappeared",
+                  "Security footage",
+                ],
+              ] as [string, string, string][]
+            ).map(([file, alt, caption]) => (
+              <figure
+                key={file}
+                style={{
+                  margin: 0,
+                  background: C.card,
+                  border: `1px solid ${C.line}`,
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  boxShadow: "0 1px 2px rgba(26,31,46,0.04)",
+                }}
+              >
+                <img
+                  src={`${import.meta.env.BASE_URL}${encodeURIComponent(file)}`}
+                  alt={alt}
+                  loading="lazy"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    aspectRatio: "1 / 1",
+                    objectFit: "cover",
+                    background: C.paper,
+                  }}
+                />
+                <figcaption
+                  style={{
+                    fontFamily: font.display,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: C.muted,
+                    padding: "8px 10px",
+                    borderTop: `1px solid ${C.line}`,
+                    textAlign: "center",
+                  }}
+                >
+                  {caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
           <Card accent={C.teal}>
             <div
               style={{
