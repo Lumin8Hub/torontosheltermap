@@ -14,7 +14,7 @@ interface Props {
   selectedId: string | null;
 }
 
-const CATEGORIES: ShelterCategory[] = ["Youth Shelter", "Adult Shelter", "Donation Centre"];
+const CATEGORIES: ShelterCategory[] = ["Youth Shelter", "Adult Shelter", "Donation Centre", "Drop-In Centre"];
 
 export function SheltersSidebar({
   all,
