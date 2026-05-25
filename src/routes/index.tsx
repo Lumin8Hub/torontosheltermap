@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const ALL_CATS: ShelterCategory[] = ["Youth Shelter", "Adult Shelter", "Donation Centre", "Drop-In Centre"];
+const ALL_CATS: ShelterCategory[] = ["Youth Shelter", "Adult Shelter", "Donation Centre", "Drop-In Centre", "Warming Centre", "Food Bank"];
 
 function Index() {
   const [query, setQuery] = useState("");
