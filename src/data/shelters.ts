@@ -2,7 +2,9 @@ export type ShelterCategory =
   | "Youth Shelter"
   | "Adult Shelter"
   | "Donation Centre"
-  | "Drop-In Centre";
+  | "Drop-In Centre"
+  | "Warming Centre"
+  | "Food Bank";
 
 export interface Shelter {
   id: string;
@@ -72,6 +74,21 @@ export const SHELTERS: Shelter[] = [
   { id: "syme-woolner", name: "Syme Woolner (Jane's Place)", address: "2468 Eglinton Ave W", category: "Drop-In Centre", services: "Families and local neighborhood residents.", lat: 43.6920, lon: -79.4670 },
   { id: "dixon-respite", name: "Dixon Hall (George St Respite)", address: "354 George St", category: "Drop-In Centre", services: "Low-barrier, 24/7 resting spaces, meals, and basic necessities.", lat: 43.6600, lon: -79.3741 },
   { id: "st-felix", name: "St. Felix Centre", address: "69 Fraser Ave", category: "Drop-In Centre", services: "Low-barrier, 24/7 access (coordinated through Central Intake).", lat: 43.6386, lon: -79.4196 },
+
+  // St. Clair → Sheppard corridor
+  { id: "roehampton", name: "The Roehampton Shelter", address: "808 Mount Pleasant Rd", category: "Adult Shelter", services: "Adult shelter providing meals and casework. (Capacity subject to ongoing municipal transitions).", lat: 43.7080, lon: -79.3870 },
+  { id: "evas-satellite", name: "Eva's Satellite", address: "Yonge & Sheppard Area", category: "Youth Shelter", services: "Specialized emergency youth shelter focusing on harm-reduction and health supports.", lat: 43.7615, lon: -79.4115 },
+  { id: "ny-warming", name: "North York Warming Centre", address: "12 Holmes Ave", category: "Warming Centre", services: "Seasonal, low-barrier resting space for adults during extreme winter weather. Pet-friendly.", lat: 43.7665, lon: -79.4135 },
+  { id: "christ-church-deer-park", name: "Christ Church Deer Park", address: "1570 Yonge St", category: "Drop-In Centre", services: "Community breakfast program and safe morning drop-in space.", lat: 43.6870, lon: -79.3935 },
+  { id: "holy-rosary", name: "Holy Rosary Church (OOTC)", address: "356 St. Clair Ave W", category: "Drop-In Centre", services: "Saturday Out of the Cold: light breakfast, hot lunch, social services, takeaway pantry items.", lat: 43.6855, lon: -79.4090 },
+  { id: "st-clements", name: "St. Clement's Church", address: "70 St. Clements Ave", category: "Drop-In Centre", services: "Wednesday afternoon community lunch and safe drop-in space.", lat: 43.7090, lon: -79.3990 },
+  { id: "glenview-presbyterian", name: "Glenview Presbyterian Church (OOTC)", address: "1 Glenview Ave", category: "Drop-In Centre", services: "Sunday evening Out of the Cold: late-afternoon drop-in followed by hot dinner.", lat: 43.7195, lon: -79.4015 },
+  { id: "churches-on-the-hill-fb", name: "Churches on the Hill Food Bank", address: "230 St. Clair Ave W", category: "Food Bank", services: "Emergency food bank providing fresh groceries and pantry staples in the midtown corridor.", lat: 43.6855, lon: -79.4045 },
+  { id: "cummer-united", name: "Cummer Avenue United Church", address: "53 Cummer Ave", category: "Drop-In Centre", services: "Wednesday daytime drop-in providing a safe, warm space and community connection.", lat: 43.7905, lon: -79.4180 },
+  { id: "dress-for-success", name: "Dress for Success Toronto", address: "5150 Yonge St", category: "Donation Centre", services: "Professional interview-ready clothing for women. Email ahead before donating.", lat: 43.7700, lon: -79.4115 },
+  { id: "sa-donor-bayview", name: "Salvation Army Donor Centre", address: "1219 Bayview Ave", category: "Donation Centre", services: "Accepts gently used general clothing, footwear, and household items.", lat: 43.7045, lon: -79.3735 },
+  { id: "oasis-bins", name: "Oasis Clothing Bank Bins", address: "Various Green P Lots (Yonge Corridor)", category: "Donation Centre", services: "Yellow drop-bins throughout the area. Donations fund Oasis Addiction Recovery Society programs.", lat: 43.7000, lon: -79.3990 },
+  { id: "diabetes-canada-bins", name: "Diabetes Canada Drop Bins", address: "16 Montgomery Ave & 20 Balmoral Ave", category: "Donation Centre", services: "Red bins at local fire stations for bagged textile donations.", lat: 43.7085, lon: -79.3985 },
 ];
 
 export const CATEGORY_COLORS: Record<ShelterCategory, string> = {
@@ -79,4 +96,6 @@ export const CATEGORY_COLORS: Record<ShelterCategory, string> = {
   "Adult Shelter": "#e74c3c",
   "Donation Centre": "#2ecc71",
   "Drop-In Centre": "#f39c12",
+  "Warming Centre": "#9b59b6",
+  "Food Bank": "#16a085",
 };
