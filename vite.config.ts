@@ -39,9 +39,7 @@ export default defineConfig({
         },
         pages: [{ path: "/" }],
       }
-    : {
-        server: { entry: "server" },
-      },
+    : undefined,
   vite: {
     base: basePath,
   },
