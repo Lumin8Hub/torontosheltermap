@@ -86,8 +86,10 @@ function MapPage() {
           "bg-card flex flex-col",
           // Mobile: bottom drawer that peeks and slides up
           "fixed inset-x-0 bottom-0 z-[1000] h-[80vh] rounded-t-2xl border-t border-border shadow-2xl transition-transform duration-300 ease-out",
-          // Desktop: take its place in the flex row
-          "md:static md:inset-auto md:z-auto md:h-full md:w-[380px] md:flex-shrink-0 md:rounded-none md:border-t-0 md:shadow-none md:transition-none md:transform-none",
+          // Desktop: take its place in the flex row (translate-y-0 explicitly
+          // overrides the mobile drawer translate — Tailwind v4 ships translate
+          // as its own CSS property, so transform-none alone doesn't reset it).
+          "md:static md:inset-auto md:z-auto md:h-full md:w-[380px] md:flex-shrink-0 md:rounded-none md:border-t-0 md:shadow-none md:transition-none md:translate-y-0",
           drawerOpen ? "translate-y-0" : "translate-y-[calc(100%-3.25rem)]",
         )}
         role="complementary"
