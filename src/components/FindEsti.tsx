@@ -421,6 +421,49 @@ export function FindEsti() {
       <main style={{ paddingTop: 44 }}>
         {/* ── WHO TO LOOK FOR ────────────────────────────────── */}
         <Section kicker="Who to look for" title="What Esti looks like">
+          {/* Reference video — first impression of how Esti moves and speaks */}
+          <figure
+            style={{
+              margin: "0 0 18px",
+              background: C.card,
+              border: `1px solid ${C.line}`,
+              borderRadius: 12,
+              overflow: "hidden",
+              boxShadow: "0 1px 2px rgba(26,31,46,0.04)",
+            }}
+          >
+            <video
+              src={`${import.meta.env.BASE_URL}Esti.mp4`}
+              controls
+              playsInline
+              preload="metadata"
+              poster={`${import.meta.env.BASE_URL}${encodeURIComponent("Esti 1.jpg")}`}
+              style={{
+                display: "block",
+                width: "100%",
+                background: "#000",
+              }}
+            >
+              Your browser does not support embedded video. You can{" "}
+              <a href={`${import.meta.env.BASE_URL}Esti.mp4`}>download the video</a> instead.
+            </video>
+            <figcaption
+              style={{
+                fontFamily: font.display,
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: C.muted,
+                padding: "8px 10px",
+                borderTop: `1px solid ${C.line}`,
+                textAlign: "center",
+              }}
+            >
+              Recent video of Esti
+            </figcaption>
+          </figure>
+
           {/* Photo gallery — reference images so people can recognise her on the street */}
           <div
             style={{
