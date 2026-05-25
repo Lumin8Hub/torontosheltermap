@@ -1,4 +1,8 @@
-export type ShelterCategory = "Youth Shelter" | "Adult Shelter" | "Donation Centre";
+export type ShelterCategory =
+  | "Youth Shelter"
+  | "Adult Shelter"
+  | "Donation Centre"
+  | "Drop-In Centre";
 
 export interface Shelter {
   id: string;
