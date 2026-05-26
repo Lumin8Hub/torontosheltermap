@@ -37,7 +37,10 @@ export default defineConfig({
           crawlLinks: true,
           autoSubfolderIndex: true,
         },
-        pages: [{ path: "/" }],
+        // Public routes only. /stakeout/admin (Phase D) MUST stay out of this
+        // list and unlinked from any prerendered page — the crawler follows
+        // Link targets, and we don't want admin paths emitted as static HTML.
+        pages: [{ path: "/" }, { path: "/stakeout" }],
       }
     : undefined,
   ...(basePath !== "/" ? { vite: { base: basePath } } : {}),

@@ -210,6 +210,21 @@ export function FindEsti() {
             >
               Interactive map
             </Link>
+            <Link
+              to="/stakeout"
+              style={{
+                fontFamily: font.display,
+                fontWeight: 700,
+                fontSize: 13,
+                color: "#fff",
+                textDecoration: "none",
+                padding: "7px 12px",
+                borderRadius: 8,
+                border: "1px solid rgba(255,255,255,0.25)",
+              }}
+            >
+              Volunteer stakeout
+            </Link>
             <a
               href="tel:6473554148"
               style={{
