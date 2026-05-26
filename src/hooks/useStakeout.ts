@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import {
   getSupabase,
   isSupabaseConfigured,
@@ -9,6 +10,32 @@ import {
 } from "@/lib/supabase";
 
 const STAKEOUT_LOOKAHEAD_HOURS = 48;
+
+// Supabase projects ship with PostgREST's `db-max-rows` set to 1000 by
+// default, and that ceiling is enforced server-side regardless of what the
+// client passes to `.range()`. To fetch the full 1,300+ slot result set
+// (56 locations × 12 windows × 2 days) we have to page in 1k chunks until
+// we get back fewer rows than we asked for. Caps out at 50k rows total so
+// a runaway query can't loop forever.
+const PAGE_SIZE = 1000;
+const MAX_PAGES = 50;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyBuilder = PostgrestFilterBuilder<any, any, any, any, any>;
+
+async function fetchAllPages<T>(build: () => AnyBuilder): Promise<T[]> {
+  const out: T[] = [];
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    const { data, error } = await build().range(from, to);
+    if (error) throw error;
+    const rows = (data ?? []) as T[];
+    out.push(...rows);
+    if (rows.length < PAGE_SIZE) return out;
+  }
+  return out;
+}
 
 export const stakeoutKeys = {
   all: ["stakeout"] as const,
@@ -45,21 +72,16 @@ export function useUpcomingSlots(lookaheadHours = STAKEOUT_LOOKAHEAD_HOURS) {
       const supabase = getSupabase();
       const now = new Date();
       const horizon = new Date(now.getTime() + lookaheadHours * 60 * 60 * 1000);
-      // Supabase REST caps responses at 1000 rows by default. 56 locations ×
-      // 12 two-hour windows × 2 days = 1,344 slots fits comfortably under 5000,
-      // and gives us headroom if the lookahead grows. Without this the page
-      // silently truncates ~25% of the next-48-hours window.
-      const { data, error } = await supabase
-        .from("slots_with_status")
-        .select(
-          "id, location_id, location_name, category, location_priority, address, lat, lng, start_time, end_time, capacity, priority_tier, filled, spots_left, state",
-        )
-        .gte("start_time", now.toISOString())
-        .lte("start_time", horizon.toISOString())
-        .order("start_time", { ascending: true })
-        .range(0, 4999);
-      if (error) throw error;
-      return (data ?? []) as SlotWithStatus[];
+      return fetchAllPages<SlotWithStatus>(() =>
+        supabase
+          .from("slots_with_status")
+          .select(
+            "id, location_id, location_name, category, location_priority, address, lat, lng, start_time, end_time, capacity, priority_tier, filled, spots_left, state",
+          )
+          .gte("start_time", now.toISOString())
+          .lte("start_time", horizon.toISOString())
+          .order("start_time", { ascending: true }),
+      );
     },
   });
 }
@@ -72,17 +94,13 @@ export function useSignups(slotIds: string[]) {
     refetchInterval: 60 * 1000,
     queryFn: async (): Promise<SignupPublic[]> => {
       const supabase = getSupabase();
-      // Same 1000-row cap concern as useUpcomingSlots: at capacity=2 per slot,
-      // a fully-booked 48h window across 56 locations is 56 × 12 × 2 × 2 ≈ 2,700
-      // signups, which would silently truncate under the default cap.
-      const { data, error } = await supabase
-        .from("signups_public")
-        .select("id, slot_id, volunteer_label, status, created_at")
-        .in("slot_id", slotIds)
-        .order("created_at", { ascending: true })
-        .range(0, 4999);
-      if (error) throw error;
-      return (data ?? []) as SignupPublic[];
+      return fetchAllPages<SignupPublic>(() =>
+        supabase
+          .from("signups_public")
+          .select("id, slot_id, volunteer_label, status, created_at")
+          .in("slot_id", slotIds)
+          .order("created_at", { ascending: true }),
+      );
     },
   });
 }
