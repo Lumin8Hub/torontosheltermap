@@ -6,18 +6,24 @@ import { SHELTERS, CATEGORY_COLORS, type Shelter } from "@/data/shelters";
 interface Props {
   visible: Shelter[];
   focusedId: string | null;
+  onSelect?: (id: string) => void;
 }
 
-export function SheltersMap({ visible, focusedId }: Props) {
+export function SheltersMap({ visible, focusedId, onSelect }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker>>({});
+
+  // Keep the latest onSelect callback reachable from the marker click handler
+  // without re-creating the map every render.
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
     const map = L.map(containerRef.current, {
-      center: [43.6550, -79.3850],
+      center: [43.655, -79.385],
       zoom: 13,
       zoomControl: true,
     });
@@ -55,6 +61,13 @@ export function SheltersMap({ visible, focusedId }: Props) {
           <p style="margin:6px 0 0;font-size:12px;color:#333;line-height:1.4">${s.services}</p>
         </div>`;
       const marker = L.marker([s.lat, s.lon], { icon }).bindPopup(popup);
+      // Wire the click into the parent's onSelect so tapping a marker also
+      // selects the matching sidebar row and (on mobile) opens the drawer.
+      // Without this, .bindPopup alone shows the popup but the parent has no
+      // way to know which marker was tapped.
+      marker.on("click", () => {
+        onSelectRef.current?.(s.id);
+      });
       marker.addTo(map);
       markersRef.current[s.id] = marker;
     });
