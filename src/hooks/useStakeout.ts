@@ -61,7 +61,7 @@ export function useUpcomingSlots(lookaheadHours = STAKEOUT_LOOKAHEAD_HOURS) {
 
 export function useSignups(slotIds: string[]) {
   return useQuery({
-    queryKey: [...stakeoutKeys.signups(), slotIds.sort().join(",")],
+    queryKey: [...stakeoutKeys.signups(), [...slotIds].sort().join(",")],
     enabled: isSupabaseConfigured && slotIds.length > 0,
     staleTime: 30 * 1000,
     refetchInterval: 60 * 1000,

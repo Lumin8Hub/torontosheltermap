@@ -71,7 +71,7 @@ const bookingSchema = z.object({
     .trim()
     .min(7, "Please enter a phone number with at least 7 digits.")
     .max(20, "Phone is too long.")
-    .regex(/[\d\s\-+()]{7,}/, "Phone should be digits and common separators."),
+    .regex(/^[\d\s\-+()]{7,}$/, "Phone should be digits and common separators."),
 });
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
