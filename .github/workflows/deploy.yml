@@ -37,6 +37,14 @@ jobs:
           # Project page at https://lumin8hub.github.io/torontosheltermap/,
           # so assets must be served from "/torontosheltermap/".
           BASE_PATH: /torontosheltermap/
+          # Supabase config for the /stakeout/ scheduler. The publishable
+          # (anon) key is safe to ship in the bundle by design — RLS is the
+          # actual gate (see supabase/README.md, EPIC 2.7 verification).
+          # Keeping them as repo secrets just lets us rotate without a code
+          # change. If unset, the /stakeout/ page renders a placeholder
+          # instead of crashing the rest of the site.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: bun run build
 
       - name: Prepare GitHub Pages output
