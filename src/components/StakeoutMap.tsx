@@ -32,6 +32,18 @@ const STATE_RING: Record<LocationAvailability["state"], string> = {
   none: "#9ca3af", // gray-400
 };
 
+// Locations are admin-editable in Supabase, so any value that ends up in a
+// Leaflet popup (rendered via innerHTML) must be escaped first. Pin colours
+// are not data-derived and stay hard-coded above.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function pinHtml(fillColor: string, ringColor: string) {
   return `<span style="
     background-color:${fillColor};
@@ -50,12 +62,16 @@ function popupHtml(loc: Location, av: LocationAvailability | undefined) {
       ? "No upcoming slots"
       : `${av.openSlots} of ${av.totalSlots} slots open`
     : "Loading slots…";
+  // Every interpolated string must go through escapeHtml: loc.name and
+  // loc.address come from Supabase, loc.id is a UUID we use as an attribute
+  // value (still escaped to be safe), and `summary` is composed from
+  // db-sourced numeric counts.
   return `
     <div style="width:220px;font-family:inherit">
-      <h4 style="margin:0 0 4px;font-size:14px;font-weight:700;color:#1a1f2e">${loc.name}</h4>
-      <p style="margin:2px 0 6px;font-size:12px;color:#555">${loc.address ?? ""}</p>
-      <p style="margin:0 0 8px;font-size:12px;color:#333"><b>${summary}</b></p>
-      <button data-stakeout-loc-button="${loc.id}" style="
+      <h4 style="margin:0 0 4px;font-size:14px;font-weight:700;color:#1a1f2e">${escapeHtml(loc.name)}</h4>
+      <p style="margin:2px 0 6px;font-size:12px;color:#555">${escapeHtml(loc.address ?? "")}</p>
+      <p style="margin:0 0 8px;font-size:12px;color:#333"><b>${escapeHtml(summary)}</b></p>
+      <button data-stakeout-loc-button="${escapeHtml(loc.id)}" style="
         display:inline-block;padding:6px 10px;background:#0f6e6e;color:#fff;
         border:none;border-radius:6px;font-size:12px;font-weight:700;
         cursor:pointer;width:100%;
@@ -107,9 +123,11 @@ export function StakeoutMap({ locations, availabilityByLocId, focusedId, onSelec
 
       marker.on("popupopen", (evt) => {
         const node = evt.popup.getElement();
-        const btn = node?.querySelector<HTMLButtonElement>(
-          `[data-stakeout-loc-button="${loc.id}"]`,
-        );
+        // loc.id is a UUID from Supabase — safe to use as a querySelector
+        // attribute value with double-quotes, but use CSS.escape defensively
+        // in case an upstream column type ever loosens.
+        const sel = `[data-stakeout-loc-button="${CSS.escape(loc.id)}"]`;
+        const btn = node?.querySelector<HTMLButtonElement>(sel);
         btn?.addEventListener("click", () => onSelectRef.current(loc.id), { once: true });
       });
 

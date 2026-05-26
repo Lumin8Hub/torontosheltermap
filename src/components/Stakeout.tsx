@@ -100,12 +100,16 @@ export function Stakeout() {
   }, [locations.data, query, activePriorities]);
 
   // ── Deep linking ──────────────────────────────────────────────────────
-  // ?location=<external_id> deep-links to a specific location's detail view.
-  // We keep selectedId in URL state so the sidebar and the URL never drift.
+  // ?location=<external_id-or-uuid> deep-links to a specific location's
+  // detail view. external_id is preferred ("covenant-house" reads better in
+  // a shared URL than a uuid) but the schema allows external_id to be null,
+  // so we fall back to the internal uuid for those rows. The resolver below
+  // matches against both fields.
   const selectedLocation = useMemo<Location | null>(() => {
     const target = search.location?.trim();
     if (!target) return null;
-    return (locations.data ?? []).find((l) => l.external_id === target) ?? null;
+    const all = locations.data ?? [];
+    return all.find((l) => l.external_id === target) ?? all.find((l) => l.id === target) ?? null;
   }, [search.location, locations.data]);
 
   const handleSelect = (id: string | null) => {
@@ -116,10 +120,11 @@ export function Stakeout() {
     }
     const loc = (locations.data ?? []).find((l) => l.id === id);
     if (!loc) return;
-    navigate({
-      search: { location: loc.external_id ?? undefined },
-      replace: false,
-    }).catch(() => {});
+    // Prefer the human-readable external_id when present; otherwise fall back
+    // to the internal uuid so the detail view still opens for rows without an
+    // external_id.
+    const slug = loc.external_id ?? loc.id;
+    navigate({ search: { location: slug }, replace: false }).catch(() => {});
     setDrawerOpen(true);
     setExpandedSlotId(null);
   };
@@ -139,6 +144,17 @@ export function Stakeout() {
 
   const totalSlots = slots.data?.length ?? 0;
   const totalOpen = (slots.data ?? []).filter((s) => s.state !== "full").length;
+
+  // The sidebar header summarises the currently-filtered list, so its slot
+  // count has to match the filtered location count. totalOpen above is the
+  // site-wide count and is used for the page-level counter overlay + footer.
+  const visibleOpen = useMemo(() => {
+    let n = 0;
+    for (const loc of visibleLocations) {
+      n += availabilityByLocId.get(loc.id)?.openSlots ?? 0;
+    }
+    return n;
+  }, [visibleLocations, availabilityByLocId]);
 
   const isLoading = locations.isLoading || slots.isLoading;
   const isError = locations.isError;
@@ -394,7 +410,7 @@ export function Stakeout() {
                   ? "Hide list"
                   : selectedLocation
                     ? `${selectedLocation.name}`
-                    : `Filters & list · ${visibleLocations.length} locations · ${totalOpen} open slots`}
+                    : `Filters & list · ${visibleLocations.length} locations · ${visibleOpen} open slots`}
               </span>
             </button>
 
@@ -424,6 +440,7 @@ export function Stakeout() {
                   onTogglePriority={togglePriority}
                   totalOpen={totalOpen}
                   totalSlots={totalSlots}
+                  visibleOpen={visibleOpen}
                 />
               )}
             </div>
@@ -447,9 +464,10 @@ export function Stakeout() {
 
             {/* Counter overlay (desktop only) */}
             <div className="pointer-events-none absolute right-4 top-4 z-[400] hidden max-w-[280px] rounded-lg border border-border bg-card/95 p-3 text-xs leading-relaxed text-foreground shadow-lg backdrop-blur md:block">
-              <div className="font-semibold">{totalOpen} open slots · next 48 hours</div>
+              <div className="font-semibold">{visibleOpen} open slots · next 48 hours</div>
               <div className="mt-1 text-muted-foreground">
-                Across {visibleLocations.length} of {locations.data?.length ?? 0} locations.
+                Across {visibleLocations.length} of {locations.data?.length ?? 0} locations
+                {visibleLocations.length < (locations.data?.length ?? 0) ? " (filtered)" : ""}.
               </div>
             </div>
 

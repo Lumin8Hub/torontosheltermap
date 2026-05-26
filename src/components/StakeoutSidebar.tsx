@@ -378,6 +378,10 @@ interface Props {
   onTogglePriority: (p: number) => void;
   totalOpen: number;
   totalSlots: number;
+  // open-slot count restricted to currently-visible locations (after
+  // priority + search filters). Used in the list header so the slot count
+  // and the location count stay consistent when the user narrows the list.
+  visibleOpen: number;
 }
 
 export function StakeoutSidebar({
@@ -396,6 +400,7 @@ export function StakeoutSidebar({
   onTogglePriority,
   totalOpen,
   totalSlots,
+  visibleOpen,
 }: Props) {
   if (selectedLocation) {
     return (
@@ -415,7 +420,8 @@ export function StakeoutSidebar({
       <div className="border-b border-border p-4">
         <h2 className="text-base font-bold tracking-tight text-foreground">Pick a location</h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          {totalOpen} open slots across {visibleLocations.length} locations · next 48 hours
+          {visibleOpen} open slots across {visibleLocations.length} of {allLocations.length}{" "}
+          locations · next 48 hours
         </p>
 
         <div className="relative mt-3">
