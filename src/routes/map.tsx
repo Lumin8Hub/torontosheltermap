@@ -43,6 +43,7 @@ function MapPage() {
   const [MapComp, setMapComp] = useState<null | React.ComponentType<{
     visible: Shelter[];
     focusedId: string | null;
+    onSelect?: (id: string) => void;
   }>>(null);
 
   useEffect(() => {
@@ -130,7 +131,7 @@ function MapPage() {
           and the remaining width on desktop. */}
       <main className="absolute inset-0 md:relative md:inset-auto md:flex-1">
         {MapComp ? (
-          <MapComp visible={visible} focusedId={selectedId} />
+          <MapComp visible={visible} focusedId={selectedId} onSelect={handleSelect} />
         ) : (
           <div className="flex h-full items-center justify-center bg-muted text-sm text-muted-foreground">
             Loading map…
