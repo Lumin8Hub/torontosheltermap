@@ -1,8 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { Stakeout } from "@/components/Stakeout";
+
+// Search params for /stakeout/. The optional `location` param is the
+// locations.external_id (e.g. "covenant-house") so links can be shared
+// to focus a specific shelter's slot list:
+//   /stakeout/?location=covenant-house
+const searchSchema = z.object({
+  location: z.string().optional(),
+});
 
 export const Route = createFileRoute("/stakeout/")({
   component: Stakeout,
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "Volunteer stakeout — Find Esti" },

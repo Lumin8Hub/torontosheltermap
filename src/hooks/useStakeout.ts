@@ -45,6 +45,10 @@ export function useUpcomingSlots(lookaheadHours = STAKEOUT_LOOKAHEAD_HOURS) {
       const supabase = getSupabase();
       const now = new Date();
       const horizon = new Date(now.getTime() + lookaheadHours * 60 * 60 * 1000);
+      // Supabase REST caps responses at 1000 rows by default. 56 locations ×
+      // 12 two-hour windows × 2 days = 1,344 slots fits comfortably under 5000,
+      // and gives us headroom if the lookahead grows. Without this the page
+      // silently truncates ~25% of the next-48-hours window.
       const { data, error } = await supabase
         .from("slots_with_status")
         .select(
@@ -52,7 +56,8 @@ export function useUpcomingSlots(lookaheadHours = STAKEOUT_LOOKAHEAD_HOURS) {
         )
         .gte("start_time", now.toISOString())
         .lte("start_time", horizon.toISOString())
-        .order("start_time", { ascending: true });
+        .order("start_time", { ascending: true })
+        .range(0, 4999);
       if (error) throw error;
       return (data ?? []) as SlotWithStatus[];
     },
@@ -67,11 +72,15 @@ export function useSignups(slotIds: string[]) {
     refetchInterval: 60 * 1000,
     queryFn: async (): Promise<SignupPublic[]> => {
       const supabase = getSupabase();
+      // Same 1000-row cap concern as useUpcomingSlots: at capacity=2 per slot,
+      // a fully-booked 48h window across 56 locations is 56 × 12 × 2 × 2 ≈ 2,700
+      // signups, which would silently truncate under the default cap.
       const { data, error } = await supabase
         .from("signups_public")
         .select("id, slot_id, volunteer_label, status, created_at")
         .in("slot_id", slotIds)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: true })
+        .range(0, 4999);
       if (error) throw error;
       return (data ?? []) as SignupPublic[];
     },
